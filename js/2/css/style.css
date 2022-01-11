@@ -1,0 +1,152 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+    background: skyblue;
+  }
+  
+  .container {
+    width: 1140px;
+  }
+
+  #form-number {
+    height: 1240px;
+    display: flex;
+    margin: auto;
+    flex-wrap: wrap;
+  }
+
+  #form {
+    max-width: 540px;
+    margin-bottom: 50px;
+    margin-top: 50px;
+  }
+
+.game-cards {
+
+}
+
+.card {
+
+    margin: auto;
+    position: relative;
+    border: none;
+    transform: scale(1);
+    transform-style: preserve-3d;
+    transition: transform .4s;
+}
+
+.card2 {
+  width: calc(50% - 10px);
+  height: calc(50% - 10px);
+}
+
+.card4 {
+  width: calc(25% - 10px);
+  height: calc(25% - 10px);
+}
+
+.card6 {
+  width: calc(16.66% - 10px);
+  height: calc(16.66% - 10px);
+}
+
+
+.card8 {
+  width: calc(12.5% - 10px);
+  height: calc(12.5% - 10px);
+}
+
+.card10 {
+  width: calc(10% - 5px);
+  height: calc(10% - 5px);
+}
+
+.card.flip {
+  transform:  rotateY(180deg);
+}
+
+
+.card:active {
+   transform: scale(0.97);
+   transition: transform .2s;
+}
+
+
+
+.front,
+.back {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  position: absolute;
+  border-radius: 15px;
+  background: #1C7CCC;
+  backface-visibility: hidden;
+}
+
+.front {
+  text-align: center;
+  transform: rotateY(180deg);
+}
+
+.text {
+  display: block;
+}
+
+.text2 {
+  margin-top: 170px;
+  font-size: 200px;
+  line-height: 200px;
+}
+
+.text4 {
+  margin-top: 60px;
+  font-size: 130px;
+  line-height: 130px;
+}
+
+
+.text6 {
+  margin-top: 30px;
+  font-size: 85px;
+  line-height: 85px;
+}
+
+.text8 {
+  margin-top: 20px;
+  font-size: 60px;
+  line-height: 60px;
+}
+
+
+.text10 {
+  margin-top: 15px;
+  font-size: 45px;
+  line-height: 45px;
+}
+
+
+.btn-wrapper {
+  display: inline-block;
+  margin: auto;
+  width:100%;
+  height: 120px;
+  margin-top: 80px;
+  text-align: center;
+
+}
+
+.btn {
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 42px;
+  color: white;
+  background-color: goldenrod;
+  border: 2px solid white;
+  border-radius: 15px;
+}

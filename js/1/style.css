@@ -1,0 +1,33 @@
+.heading {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.border {
+    margin-top: 50px;
+    border: 1px solid black;
+}
+
+.size {
+    width: 80px;
+}
+
+.filter {
+    margin-top: 0px;
+}
+
+
+.table-heading1,
+.table-heading2,
+.table-heading3,
+.table-heading4 {
+    width: 80px;
+    border:2px solid yellow;
+}
+
+.table-heading1:active,
+.table-heading2:active,
+.table-heading3:active,
+.table-heading4:active {
+    background-color: skyblue;
+}
