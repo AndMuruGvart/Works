@@ -1,29 +1,44 @@
-.componentForm {
-  padding: 20px;
-}
-
-
-
-.textarea {
-  height: 70px;
-  width: 100%;
-
-}
-
-.button {
-  display: block;
-  margin-right: 0;
-  margin-left: auto;
-  background-color: var(--orange);
-  border: none;
-  color: white;
-  padding: 17px 50px;
-  text-align: center;
-  text-decoration: none;
-  font-size: 16px;
-  cursor: pointer;
-}
-.button:disabled {
-  opacity: 50%;
-  cursor: default;
-}
+.form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .input {
+    height: 89px;
+    border: 1px solid #D9D9D9;
+    padding: 16px;
+    box-sizing: border-box;
+    border-radius: 3px 3px 0px 0px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 19px;
+    color: #999999;
+    resize: none;
+  }
+  
+  .input[aria-invalid] {
+    border-color: red;
+  }
+  
+  .button {
+    width: 220px;
+    height: 50px;
+    background: #CC6633;
+    border-radius: 0px 0px 3px 0px;
+    align-self: flex-end;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 16px;
+    text-align: center;
+    color: #FFFFFF;
+  }
+  
+  .button:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+  

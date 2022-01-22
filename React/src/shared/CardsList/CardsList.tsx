@@ -1,94 +1,110 @@
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './cardslist.css';
 import { Card } from './Card';
-import { postsContext } from '../context/postsContext';
-// import {usePostsData} from '../../hooks/usePostsData';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/reducer';
+import { set } from 'react-hook-form';
 
-interface ITitle {
-  text: string;
-  id: string;
-}
+export function CardsList() {
+  const token=useSelector<RootState>(state=>state.token.token);
+  const [posts, setPosts] =useState<any[]>([]);
+  const [loading, setLoading]=useState(false);
+  const [errorLoading, setErrorLoading ] =useState('');
+  const bottomOfList=useRef<HTMLDivElement>(null);
+  const [nextAfter, setNextAfter ] =useState('');
+  const [count, setCount] = useState<number>(0);
+  const buttonLoading = useRef<HTMLButtonElement>(null);
+  const [postLoading, setPostLoading] = useState(true);
 
-interface IMyListProps {
-  list: ITitle[];
-}
-const list = [
-  {text: 'one', As: 'a' as const, id: "asdf1"},
-  {text: 'two', As: 'a' as const, id: "asdf2"},
-  {text: 'three', As: 'a' as const, id: "asdf3"}
-]
-export function CardsList(): JSX.Element {
-  const [isPosts, setIsPosts] = useState(false);
-  const [isList, setIsList] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errorLoading, setErrorLoading] = useState('');
-  const [posts, setNewPosts, newPosts] = useContext(postsContext);
-  //const [posts, setNewPosts, newPosts] = usePostsData();
-  const bottomOfList = useRef(null);
-  const [isMorePosts, setIsMorePosts] = useState(false);
-  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    setIsPosts(!!posts.children?.length && !posts.error);
-    setLoading(!posts.children?.length && !posts.error && posts.loading);
-    setErrorLoading(posts.error);
-    setIsList(!posts.children?.length && !posts.loading && !posts.error);
-    setIsMorePosts(posts.loadCount !== 0 && posts.loadCount % 3 === 0);
-  }, [posts]);
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !!posts.children?.length && !isMorePosts) {
-        setNewPosts(true);
-      }
-    }, {
-      rootMargin: '200px'
-    });
-    if (bottomOfList.current) {
-      observer.observe(bottomOfList.current);
+    async function load() {
+      setLoading(true);
+      setErrorLoading('');
+      try {
+        const {data: {data: {after, children}}}=await axios.get(
+          'https://oauth.reddit.com/rising/', {
+              headers: {Authorization: `bearer ${token}`},
+              params: {
+                limit: 10,
+                after: nextAfter,
+              }
+          });
+          setNextAfter(after);
+          setPosts(prevChildren=>prevChildren.concat(...children));
+        } catch(error) {
+          setErrorLoading(String(error));
+      } 
+      setLoading(false);
     }
+
+    const observer=new IntersectionObserver((entries)=> {
+      if ((entries[0].isIntersecting) && (count<=2)) {
+        load(); setCount(count+1);
+      } else setPostLoading(false);
+    }, {
+      rootMargin: '5px'
+    })
+
+    if (bottomOfList.current) {
+      observer.observe(bottomOfList.current)
+    }
+
     return () => {
       if (bottomOfList.current) {
-        observer.unobserve(bottomOfList.current);
+        observer.unobserve(bottomOfList.current)
       }
     }
-  }, [bottomOfList.current, newPosts]);
+  }, [bottomOfList.current, nextAfter, token, postLoading])
+
+
   function handleClick() {
-    setNewPosts(true);
-    if (buttonRef.current) buttonRef.current.innerHTML = 'Loading...';
+    if (buttonLoading.current) buttonLoading.current.innerHTML = 'Загрузка...';
+    setCount(0);
+    setPostLoading(true);
   }
   return (
-    <>
-    <ul className={styles.cardsList}>
-      {isPosts &&
-        posts?.children?.map((
-          {
-            id, title, author,
-            created_utc, icon_img,
-            num_comments, score,
-            thumbnail, content_categories, selftext
-          }
-        ) => {
-          return (<Card key={id}
-                        id={id}
-                        title={title}
-                        text={selftext}
-                        cardImg={thumbnail}
-                        numComments={num_comments}
-                        createdAt={created_utc}
-                        authorName={author}
-                        avatar={icon_img}
-                        karma={score}
-                        contentCategories={content_categories}
-          />)
-        })
+    <div >
+       <ul className={styles.cardList}>
+      {posts.length===0 && !loading && !errorLoading && (
+          <div  style={{textAlign: 'center'}}>Нет ни одного поста</div>
+      )} 
+      {posts.map(post => (
+        <Card
+        key={post.data.id}
+        title={post.data.title}
+        text={post.data.selftext}
+        cardImage={post.data.thumbnail}
+        author={post.data.author}
+        karmaCounter={post.data.score}
+        />
+      ))}
+
+
+      {loading && (
+        <div  style={{textAlign: 'center'}}>Загрузка...</div>
+      )}
+      {
+        errorLoading && (
+          <div role="alert" style={{textAlign: 'center'}}>
+            {errorLoading}
+          </div>
+        )
       }
-      { loading && <div style={{textAlign: 'center'}}>Loading...</div> }
-      { errorLoading && <div style={{textAlign: 'center'}}>Loading posts: {errorLoading} :(</div> }
-      { isList && list.map((item) => <Card key={item.id} id={item.id} title={item.text} text={'asdf'}/>) }
-      { isMorePosts && <button className={styles.button} ref={buttonRef} onClick={handleClick}>MORE POSTS!!!</button>}
+        {
+          (count==3 ) && 
+          <div className={styles.list}>
+            <button className={styles.button} ref={buttonLoading} onClick={handleClick}>Загрузить еще</button>
+          </div>
+        }
+
     </ul>
     <div ref={bottomOfList}></div>
-    </>
+    </div>
+   
+    
   );
 }
+
+

@@ -1,46 +1,36 @@
-import {Reducer} from 'redux';
-// import {Reducer} from 'redux';
-import {
-  ME_REQUEST,
-  ME_REQUEST_ERROR,
-  ME_REQUEST_SUCCESS,
-  TMeRequestAction,
-  TMeRequestErrorAction,
-  TMeRequestSuccessAction
-} from './actions';
-import {IUserData} from '../../hooks/useUserData';
+import { Reducer } from "react";
+import { IUserData, MeRequestAction, MeRequestErrorAction, MeRequestSuccessAction, ME_REQUEST, ME_REQUEST_ERROR, ME_REQUEST_SUCCESS } from "./actions";
 
-export type TMeState = {
-  loading: boolean,
-  data: IUserData,
-  error: string
+
+export type MeState={
+    loading:boolean;
+    error: string;
+    data: IUserData
 }
-const initialMeState = {
-  loading: false,
-  data: {},
-  error: ''
-}
-export type TMeActions = TMeRequestAction | TMeRequestSuccessAction | TMeRequestErrorAction;
-export const meReducer: Reducer<TMeState, TMeActions> = (state= initialMeState, action) => {
-  switch(action.type) {
-    case ME_REQUEST:
-      return {
-        ...state,
-        loading: true
-      }
-    case ME_REQUEST_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        data: action.data,
-      }
-    case ME_REQUEST_ERROR:
-      return {
-        ...state,
-        loading: false,
-        error: action.error
-      }
-    default:
-      return state;
-  }
+
+type MeActions=MeRequestAction
+|MeRequestSuccessAction
+|MeRequestErrorAction;
+
+
+export const meReducer:Reducer<MeState, MeActions> = (state, action) => {
+    switch (action.type) {
+        case ME_REQUEST: 
+            return {
+                ...state,
+                loading:true,
+            };
+        case ME_REQUEST_ERROR:
+            return {
+                ...state,
+                error: action.error,
+                loading:false,
+            }
+            case ME_REQUEST_SUCCESS:
+                return {
+                    ...state,
+                    data: action.data,
+                }
+        default: return state;
+    }
 }

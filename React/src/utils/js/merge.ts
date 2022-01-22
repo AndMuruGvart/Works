@@ -1,6 +1,6 @@
-export function merge<O extends object>(obj: O) {
-	return <T extends object>(obj2: T) => ({
-		...obj,
-		...obj2,
-	})
+export function merge <O extends object> (obj:O) {
+    return<K extends object>(obj2:K) => ({
+        ...obj,
+        ...obj2
+    })
 }

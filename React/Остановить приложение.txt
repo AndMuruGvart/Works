@@ -1,0 +1,2 @@
+$ heroku psscale web=0
+Scaling web processes... done, now running 0

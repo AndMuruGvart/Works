@@ -1,27 +1,25 @@
-import { useEffect, useState, useContext } from 'react';
-import axios from 'axios';
-import { tokenContext } from '../shared/context/tokenContext';
-import {pureUrl} from '../utils/js/pureUrl';
-import {useDispatch, useSelector} from 'react-redux';
-import {TRootState} from '../store/reducer';
-import {meRequestAsync} from '../store/me/actions';
+import React, { useContext } from "react";
+import { useEffect} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/reducer";
+import { IUserData, meRequestAsync } from "../store/me/actions";
 
-export interface IUserData {
-  name?: string;
-  iconImg?: string;
-}
 
-export function useUserData () {
-  // const [data, setData] = useState<IUserData>({});
-  // const token = useContext(tokenContext);
-  const token = useSelector<TRootState, string>(state => state.token);
-  const data = useSelector<TRootState, IUserData>(state => state.me.data);
+export function useUserData() {
+    const data=useSelector<RootState, IUserData>(state=>state.me.data);
+    const loading=useSelector<RootState, boolean>(state=>state.me.loading);
 
-  const dispatch = useDispatch();
+    const token =useSelector<RootState>(state=>state.token.token);
+    const dispatch=useDispatch();
+    useEffect(() => {
 
-  useEffect(() => {
-    if (token === 'undefined' || !token) return;
-    dispatch(meRequestAsync);
-  }, [token])
-  return [data]
+        if (!token) return;
+        dispatch(meRequestAsync());
+        
+    }, [token])
+
+    return {
+        data,
+        loading
+    };
 }

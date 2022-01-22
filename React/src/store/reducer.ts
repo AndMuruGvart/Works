@@ -1,75 +1,77 @@
-import {Reducer, ActionCreator, Action} from 'redux';
-import {
-  ME_REQUEST,
-  ME_REQUEST_ERROR,
-  ME_REQUEST_SUCCESS, TMeRequestErrorAction,
-} from './me/actions';
-//import {Reducer} from 'react';
-import {meReducer, TMeActions, TMeState} from './me/reducer';
-import {ThunkAction} from 'redux-thunk';
-import {SET_TOKEN, TSetTokenAction} from './token/actions';
-import {tokenReducer} from './token/reducer';
+import { ActionCreator, Reducer } from "redux";
+import { MeRequestAction, MeRequestErrorAction, MeRequestSuccessAction, ME_REQUEST, ME_REQUEST_ERROR, ME_REQUEST_SUCCESS } from "./me/actions";
+import { meReducer, MeState } from "./me/reducer";
+import { SetTokenAction, TOKEN } from "./saveToken/actionsToken";
+import {  tokenReducer, TokenState} from "./saveToken/reducerToken";
 
-export type TRootState = {
-  token: string;
-  // commentText: string;
-  commentText: {
-    comment: string;
-  }
-  me: TMeState;
+export type RootState = {
+    commentText:string;
+    token: TokenState;
+    me: MeState;
 }
 
-export const initialState: TRootState = {
-  token: '',
-  commentText: {
-    comment: 'ept) '
-  },
-  me: {
-    loading: false,
-    data: {},
-    error: ''
-  },
+const initialState:RootState={
+    commentText: 'Привет, Skillbox!',
+    token:{
+        token:'',
+    },
+    me: {
+        loading:false,
+        error: '',
+        data:{},
+    },
+
+};
+
+
+const UPDATE_COMMENT='UPDATE_COMMENT';
+type UpdateCommentAction= {
+    type:typeof UPDATE_COMMENT;
+    text:string;
 }
 
-const UPDATE_COMMENT = 'UPDATE_COMMENT';
-type TUpdateComment = {
-  type: typeof UPDATE_COMMENT,
-  // text: string
-  text: {
-    comment: string
-  }
-}
-export const updateComment: ActionCreator<TUpdateComment> = (text: {comment: string}) => ({
-  type: UPDATE_COMMENT,
-  text
+
+export const updateComment:ActionCreator<UpdateCommentAction>=(text:string) =>({
+    type:UPDATE_COMMENT,
+    text,
 })
 
-export type TRootAction =
-  TSetTokenAction |
-  TUpdateComment |
-  TMeActions;
-export const rootReducer: Reducer<TRootState, TRootAction> = (
-  state = initialState,
-  action) => {
-  switch (action.type) {
-    case SET_TOKEN:
-      return {
-        ...state,
-        token: tokenReducer(state.token, action)
-      }
-    case UPDATE_COMMENT:
-      return {
-        ...state,
-        commentText: action.text
-      }
-    case ME_REQUEST:
-    case ME_REQUEST_SUCCESS:
-    case ME_REQUEST_ERROR:
-      return {
-        ...state,
-        me: meReducer(state.me, action)
-      }
-    default:
-      return state;
-  }
+
+export type MyAction=UpdateCommentAction
+|SetTokenAction
+|MeRequestAction
+|MeRequestSuccessAction
+|MeRequestErrorAction
+
+
+
+export const rootReducer:Reducer<RootState, MyAction>=(state=initialState, action) => {
+    switch (action.type) {
+       case UPDATE_COMMENT: 
+        return {
+            ...state,
+            commentText: action.text,
+        };
+
+        case TOKEN: 
+        return {
+            ...state,
+            token: tokenReducer(state.token, action),
+        };
+
+        case ME_REQUEST:
+        case ME_REQUEST_SUCCESS:
+        case ME_REQUEST_ERROR:
+            return {
+                ...state,
+                me: meReducer(state.me, action),
+            }
+
+
+        default:
+             return state;
+    }
+    
 }
+
+

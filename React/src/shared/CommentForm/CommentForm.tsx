@@ -1,82 +1,82 @@
-import React, {ChangeEvent, FormEvent, useEffect, useRef} from 'react';
+import React, { ChangeEvent, FormEvent, useState } from 'react';
+import { useDispatch, useSelector, useStore } from 'react-redux';
 import styles from './commentform.css';
-import {intersection} from 'ramda';
-import {SubmitHandler, useForm} from 'react-hook-form';
-import {connect} from 'react-redux';
-import {updateComment} from '../../store/reducer';
-import { DevTool } from "@hookform/devtools";
+import { SubmitHandler, useForm } from "react-hook-form";
 
-interface ICommentForm {
-  className?: string;
-  author?: string;
-  onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void;
-  onSubmit?: (value: ICommentValue) => void;
-  comment: {comment: string};
-}
-export interface ICommentValue {
-  comment: string;
-}
-interface ICommentError {
-  comment: string;
-}
-function NOOP() {
-  // do nothing
-}
-const validate = (values: ICommentValue) => {
-  const errors: ICommentError = {comment: ''};
-  if (values.comment.length === 0) errors.comment = 'Comment empty! White something, NOW!';
-  return errors;
-}
-export function CommentForm(props: ICommentForm) {
-  const {
-    className=styles.form,
-    author,
-    onChange=NOOP,
-    onSubmit=NOOP,
-    comment,
-    // comment={comment: `${author}, ept `},
-  } = props;
+type FormData = {
+  commentForm: string;
+};
 
-  const {
-    setValue,
-    control,
-    setFocus,
-    register,
-    handleSubmit,
-    formState: { errors }
-  } = useForm<ICommentValue>({defaultValues: comment, reValidateMode: 'onChange'});
 
-  const onSubmitForm: SubmitHandler<ICommentValue> = comment => onSubmit(comment);
-  useEffect(() => {
-    setFocus('comment');
-  }, [setFocus])
+export function CommentForm() {
+
+  // const [value, setValue]=useState('');
+  // const [touched, setTouched]=useState(false);
+  // const [valueError, setValueError]=useState('');
+
+  // function handleSubmit(event:FormEvent) {
+  //   event.preventDefault();
+  //   setTouched(true);
+
+  //   setValueError(validateValue())
+
+  //   const isFormValid=!validateValue();
+  //   if (!isFormValid) return;
+
+  //   alert('Форма отправлена')
+  // }
+
+  // function handleChange(event:ChangeEvent<HTMLTextAreaElement>) {
+  //   setValue(event.target.value);
+  // }
+
+
+  // function validateValue() {
+  //   if (value.length<=3) return 'Введите больше трех символов';
+  //   return '';
+  // }
+
+
+  // return (
+  //   <form className={styles.form} onSubmit={handleSubmit}> 
+  //      <textarea
+  //          className={styles.input}
+  //          value={value}
+  //          onChange={handleChange}
+  //          aria-invalid={valueError ? 'true': undefined}/> 
+  //         {touched && valueError && (<div>{validateValue()}</div>)}
+  //      <button type='submit' className={styles.button} >Комментировать</button>
+  //   </form>
+  // );
+
+
+
+
+  const { register, setValue, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const onSubmit: SubmitHandler<FormData> = (data) =>  alert(JSON.stringify(data));
 
   return (
-    <>
-      <form className={className} onSubmit={handleSubmit(onSubmitForm)}>
-        <textarea
-          className={styles.textarea}
-          {...register(
-            'comment',
-            { required: true, minLength: { value: 3, message: 'Min 3 symbols required'}}
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <textarea className={styles.input} {...register(
+            'commentForm', { required: true, minLength: { value: 4, message: 'Введите больше трех символов'}}
           )}
-          onChange={(e) => {
-            setValue('comment', e.target.value, { shouldValidate: true })
-            onChange(e);
+          onChange={(event:ChangeEvent<HTMLTextAreaElement>) => {
+            const text=event.target.value;
+            setValue("commentForm", text);
           }}
-        />
-        <button
-          className={styles.button}
-          type={"submit"}
-          disabled={!!errors.comment}
-        >
-          Комментировать
-        </button>
-        {errors.comment && <span>{errors.comment.message}</span>}
-      </form>
-{/*
-    <DevTool control={control} />
-*/}
-  </>
-  )
+          aria-invalid={errors.commentForm ? 'true': undefined}
+          />
+          
+           {errors.commentForm && (<div>{'Введите больше трех символов'}</div>)};
+
+      <button type="submit"
+
+      className={styles.button}>
+        Комментировать
+      </button>
+    </form>
+  );
+
+
+ 
 }

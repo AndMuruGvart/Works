@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './threadtitle.css';
 
-export function ThreadTitle(): JSX.Element {
+export function ThreadTitle() {
   return (
     <h1 className={styles.threadTitle}>Header</h1>
   );

@@ -1,25 +1,30 @@
-/*eslint-env es6*/
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './dropdown.css';
-import { useIsMounted } from '../../hooks/useIsMounted';
 import ReactDOM from 'react-dom';
+import { DropdownPortal } from './DropdownPortal';
 
-interface IDropdownProps {
-  children: React.ReactNode;
-  classNameList?: string;
+
+interface IDropdown {
+  button: React.ReactNode;
+  children:React.ReactNode;
+  onClose?: () => void;
 }
 
-export function Dropdown({children, classNameList}: IDropdownProps): JSX.Element {
-  const node = typeof window !== 'undefined' ? document.querySelector('#dropdown_root') : undefined;
-  if (!node) { return <></>; }
 
-  return ReactDOM.createPortal((
-    <div className={styles.container}>
-        <div className={styles.listContainer}>
-          <div className={`styles.list ${classNameList}`}>
-            {children}
-          </div>
-        </div>
+export function Dropdown(props:IDropdown) {
+  const [isDropdownOpen, setIsDropdownOpen] =useState(false);
+  return (
+    <div className={styles.container} onClick={()=>{setIsDropdownOpen(true)}}>
+      <div id='dropdown_root'>
+        {props.button}
+      </div>
+      {isDropdownOpen && (
+        <DropdownPortal children={props.children} onClose={()=> {setIsDropdownOpen(false)}} />
+      )}
+     
     </div>
-  ), node);
+  );
+
+
 }
+

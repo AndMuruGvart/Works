@@ -1,51 +1,27 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styles from './card.css';
-import { MetaData } from './MetaData';
-import { Title } from './Title';
+import { TextContent } from './TextContent';
 import { Preview } from './Preview';
 import { Menu } from './Menu';
-import { KarmaCounter } from './KarmaCounter';
-import { CommentsButton } from './CommentsButton';
-import { ShareButton } from './ShareButton';
-import { SaveButton } from './SaveButton';
-import {useComments} from '../../../hooks/useComments';
+import { Controls } from './Controls';
 
-interface ICardTitle {
-    id?: string;
-    title?: string;
-    text?: string;
-    cardImg?: string,
-    numComments?: number;
-    contentCategories?: Array<string>;
-    karma?: number;
-    createdAt?: number;
-    authorName?: string
-    avatar?: string;
+interface Props {
+  title:string;
+  text?: string;
+  cardImage?: string,
+  karmaCounter?: number;
+  author?: string
 }
 
-export function Card({ id, title, text, cardImg, numComments, contentCategories, karma, createdAt, authorName, avatar }: ICardTitle): JSX.Element {
 
 
+export function Card({title, karmaCounter, text, author, cardImage}: Props) {
   return (
     <li className={styles.card}>
-      <div className={styles.textContent}>
-        <MetaData author={authorName} avatar={avatar} createdAt={createdAt}/>
-        <Title title={title} text={text} id={id} author={authorName}/>
-      </div>
-
-      <Preview cardImg={cardImg}/>
-      <Menu />
-
-      <div className={styles.controls}>
-        <KarmaCounter karma={karma}/>
-        <CommentsButton numComments={numComments}/>
-
-        <div className={styles.actions}>
-          <ShareButton />
-          <SaveButton />
-        </div>
-      </div>
-
+      <TextContent title={title} text={text} author={author}  />
+      <Preview cardImage={cardImage} />
+      <Menu/>
+      <Controls karmaCounter={karmaCounter}/>
     </li>
   );
 }

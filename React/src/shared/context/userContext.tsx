@@ -1,24 +1,21 @@
-import React from 'react';
-import { useUserData } from '../../hooks/useUserData';
+import React  from "react";
+import { useUserData } from "../../hooks/useUserData";
 
-interface IUserContextData {
-  name?: string;
-  iconImg?: string;
-}
+export interface IUserContextData {
+    name?:string;
+    iconImage?:string;
+    loading?:boolean;
+  }
 
-export const userContext = React.createContext<IUserContextData>({});
 
-interface IUserContextProvider {
-  children: React.ReactNode
-}
+export const userContext=React.createContext<IUserContextData>({});
 
-export function UserContextProvider({ children }: IUserContextProvider) {
-  const [data] = useUserData();
-  return (
-    <userContext.Provider value={data}>
-    <>
-      {children}
-    </>
-    </userContext.Provider>
-  )
+export function UserContextProvider({children}: {children:React.ReactNode}) {
+    const {data, loading}=useUserData();
+
+    return (
+      <userContext.Provider value={data}>
+        {children}
+      </userContext.Provider>
+    )
 }

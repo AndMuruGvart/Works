@@ -1,17 +1,13 @@
-import { useState, useEffect } from 'react';
-import {} from '../store/reducer';
-import {useDispatch, useSelector} from 'react-redux';
+import { useEffect, useState } from "react";
 
-export function useToken () {
-	// const [ token, setToken ] = useState('');
-	// const token = useSelector<TRootState, string>(store => store.token);
-	// const dispatch = useDispatch();
-	// useEffect(() => {
-	// 	if (window.__token__) {
-	// 		// setToken(window.__token__)
-	// 		dispatch(saveToken);
-	// 	}
-	// }, [])
 
-	//return [token]
+export function useToken() {
+    const [token, setToken] = useState('');
+    useEffect(() => {
+        if (window.__token__) {
+            setToken(window.__token__);
+        }
+     }, []);
+
+     return([token])
 }
